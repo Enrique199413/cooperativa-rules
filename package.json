@@ -75,6 +75,7 @@
     "xo": "0.23.0"
   },
   "dependencies": {
+    "@polymer/app-layout": "3.0.2",
     "@polymer/polymer": "3.1.0",
     "@webcomponents/webcomponentsjs": "2.2.0"
   }
