@@ -1,0 +1,19 @@
+<!--TODO solve drawer-->
+<app-drawer-layout>
+  <app-drawer slot="drawer">
+    <app-toolbar on-click="toggleDrawer">Getting Started</app-toolbar>
+  </app-drawer>
+  <app-header-layout>
+    <app-header slot="header" reveals effects="waterfall">
+      <app-toolbar>
+        <paper-icon-button icon="menu" drawer-toggle></paper-icon-button>
+        <div main-title>Title</div>
+      </app-toolbar>
+    </app-header>
+    <span on-click="toggleDrawer"></span>
+    <h1>This is the app?</h1>
+    <aside class="Meta">
+      v[[appVersion]] - ENV: [[ENV]]
+    </aside>
+  </app-header-layout>
+</app-drawer-layout>
