@@ -36,15 +36,23 @@
   <meta property="og:site_name" content="Cooperativa Rules">
   <meta property="og:image" content="/assets/icons/polymer-skeleton-192x192.png" />
 
-	<style>
-    * {
-      box-sizing: border-box;
+  <style>
+    @font-face {
+      font-family: 'Pacifico';
+      font-style: normal;
+      font-weight: 400;
+      src: local('Pacifico Regular'), local('Pacifico-Regular'), url(https://fonts.gstatic.com/s/pacifico/v12/Q_Z9mv4hySLTMoMjnk_rCXYhjbSpvc47ee6xR_80Hnw.woff2) format('woff2');
+      font-display: swap;
     }
 
-    html {
-      font-size: calc(100% + 4 * (100vw - 600px) / 400);
+    body {
+      margin: 0;
+      font-family: Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+      line-height: 1.5;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
     }
-	</style>
+  </style>
 
   <script>
     (function() {
