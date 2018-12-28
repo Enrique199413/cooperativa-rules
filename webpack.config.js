@@ -1,24 +1,26 @@
-'use strict';
+'use strict'
 
-const {resolve, join} = require('path');
-const webpack = require('webpack');
-const {GenerateSW} = require('workbox-webpack-plugin');
-const CopyWebpackPlugin = require('copy-webpack-plugin');
-const CleanWebpackPlugin = require('clean-webpack-plugin');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const HtmlWebpackExcludeAssetsPlugin = require('html-webpack-exclude-assets-plugin');
-const ScriptExtHtmlWebpackPlugin = require('script-ext-html-webpack-plugin');
+const {resolve, join} = require('path')
+const webpack = require('webpack')
+const Dotenv = require('dotenv-webpack')
+const {GenerateSW} = require('workbox-webpack-plugin')
+const CopyWebpackPlugin = require('copy-webpack-plugin')
+const CleanWebpackPlugin = require('clean-webpack-plugin')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
+const HtmlWebpackExcludeAssetsPlugin = require('html-webpack-exclude-assets-plugin')
+const ScriptExtHtmlWebpackPlugin = require('script-ext-html-webpack-plugin')
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 
-const pkg = require('./package.json');
+const pkg = require('./package.json')
 
-const ENV = process.argv.find(arg => arg.includes('NODE_ENV=production')) ? 'production' : 'development';
-const IS_DEV_SERVER = process.argv.find(arg => arg.includes('webpack-dev-server'));
-const OUTPUT_PATH = IS_DEV_SERVER ? resolve('src') : resolve('dist');
+const ENV = process.argv.find(arg => arg.includes('NODE_ENV=production')) ? 'production' : 'development'
+const IS_DEV_SERVER = process.argv.find(arg => arg.includes('webpack-dev-server'))
+const OUTPUT_PATH = IS_DEV_SERVER ? resolve('src') : resolve('dist')
 
 const processEnv = {
   NODE_ENV: JSON.stringify(ENV),
   appVersion: JSON.stringify(pkg.version)
-};
+}
 
 /**
  * === Copy static files configuration
@@ -62,7 +64,7 @@ const copyStatics = {
     to: OUTPUT_PATH,
     flatten: true
   }]
-};
+}
 
 /**
  * Plugin configuration
@@ -90,13 +92,14 @@ const renderHtmlPlugins = () =>
     new ScriptExtHtmlWebpackPlugin({
       defaultAttribute: 'defer'
     })
-  ];
+  ]
 
 const sharedPlugins = [
+  new Dotenv(),
   new webpack.DefinePlugin({'process.env': processEnv}),
   ...renderHtmlPlugins()
-];
-const devPlugins = [new CopyWebpackPlugin(copyStatics.copyWebcomponents)];
+]
+const devPlugins = [new CopyWebpackPlugin(copyStatics.copyWebcomponents)]
 const buildPlugins = [
   new CopyWebpackPlugin(
     [].concat(copyStatics.copyWebcomponents, copyStatics.copyOthers)
@@ -106,9 +109,9 @@ const buildPlugins = [
     skipWaiting: true
   }),
   new CleanWebpackPlugin([OUTPUT_PATH], {verbose: true})
-];
+]
 
-const plugins = sharedPlugins.concat(IS_DEV_SERVER ? devPlugins : buildPlugins);
+const plugins = sharedPlugins.concat(IS_DEV_SERVER ? devPlugins : buildPlugins)
 
 module.exports = {
   mode: ENV,
@@ -116,6 +119,17 @@ module.exports = {
   output: {
     path: OUTPUT_PATH,
     filename: 'bundle.js'
+  },
+  optimization: {
+    minimizer: [
+      new UglifyJsPlugin({
+        uglifyOptions: {
+          compress: {
+            drop_console: true,
+          }
+        }
+      })
+    ]
   },
   devtool: 'cheap-source-map',
   module: {
@@ -166,5 +180,5 @@ module.exports = {
     host: '0.0.0.0',
     disableHostCheck: true
   }
-};
+}
 
