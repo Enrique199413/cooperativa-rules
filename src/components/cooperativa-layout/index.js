@@ -8,37 +8,15 @@ import '@polymer/paper-icon-button/paper-icon-button'
 import '@polymer/iron-icons/iron-icons'
 import '@polymer/paper-styles/paper-styles'
 
+import { FirebaseMixin } from '../cooperativa-mixins/firebase-mixin'
+
 import css from './style.pcss'
 import template from './template.html'
+import { FirebaseAuthMixin } from '../cooperativa-mixins/firebase-auth'
 
-let firebase = require('firebase/app')
-require('firebase/firestore')
-let firebaseui = require('firebaseui')
+console.log(FirebaseMixin)
 
-let config = {
-  apiKey: 'AIzaSyCxjkmjCkNxZ_LlC8kps4SoOe3qFg_OTdg',
-  authDomain: 'cooperativa-rules.firebaseapp.com',
-  databaseURL: 'https://cooperativa-rules.firebaseio.com',
-  projectId: 'cooperativa-rules',
-  storageBucket: 'cooperativa-rules.appspot.com',
-  messagingSenderId: '712552363216'
-}
-
-let cooperativaFirebaseApp = firebase.initializeApp(config)
-
-let googleProvider = new firebase.auth.GoogleAuthProvider()
-let facebookProvider = new firebase.auth.FacebookAuthProvider()
-let cooperativaDatabase = firebase.firestore()
-
-cooperativaDatabase.settings({
-  timestampsInSnapshots: true
-})
-
-facebookProvider.setCustomParameters({
-  'display': 'popup'
-})
-
-export default class CooperativaLayout extends PolymerElement {
+export default class CooperativaLayout extends FirebaseAuthMixin(PolymerElement) {
   static get properties () {
     return {
       name: {
