@@ -26,6 +26,17 @@ let config = {
 
 let cooperativaFirebaseApp = firebase.initializeApp(config)
 
+let googleProvider = new firebase.auth.GoogleAuthProvider()
+let facebookProvider = new firebase.auth.FacebookAuthProvider()
+let cooperativaDatabase = firebase.firestore()
+
+cooperativaDatabase.settings({
+  timestampsInSnapshots: true
+})
+
+facebookProvider.setCustomParameters({
+  'display': 'popup'
+})
 
 export default class CooperativaLayout extends PolymerElement {
   static get properties () {
@@ -47,6 +58,49 @@ export default class CooperativaLayout extends PolymerElement {
 
   static get template () {
     return html([`<style>${css}</style> ${template}`])
+  }
+
+  loginGoogle () {
+    //TODO modularize and create mixin
+    firebase.auth().signInWithPopup(googleProvider).then(function (result) {
+      // This gives you a Google Access Token. You can use it to access the Google API.
+      let token = result.credential.accessToken
+      // The signed-in user info.
+      let user = result.user
+      console.log(result)
+      // ...
+    }).catch(function (error) {
+      // Handle Errors here.
+      let errorCode = error.code
+      let errorMessage = error.message
+      // The email of the user's account used.
+      let email = error.email
+      // The firebase.auth.AuthCredential type that was used.
+      let credential = error.credential
+      // ...
+    })
+  }
+
+  loginFacebook () {
+    //TODO modularize and create mixin
+    firebase.auth().signInWithPopup(facebookProvider).then(function (result) {
+      // This gives you a Facebook Access Token. You can use it to access the Facebook API.
+      var token = result.credential.accessToken
+      // The signed-in user info.
+      var user = result.user
+      console.log(result)
+      // ...
+    }).catch(function (error) {
+      // Handle Errors here.
+      console.log(error)
+      var errorCode = error.code
+      var errorMessage = error.message
+      // The email of the user's account used.
+      var email = error.email
+      // The firebase.auth.AuthCredential type that was used.
+      var credential = error.credential
+      // ...
+    })
   }
 
   constructor () {
