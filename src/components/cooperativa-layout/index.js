@@ -103,6 +103,31 @@ export default class CooperativaLayout extends PolymerElement {
     })
   }
 
+  writeDatabase () {
+    //TODO modularize on mixin
+    cooperativaDatabase.collection('users').add({
+      first: 'Alan',
+      last: 'Turing',
+      birthday: new Date(),
+      email: 'jcjiron4@gmail.com'
+    })
+      .then(function (docRef) {
+        console.log('Document written with ID: ', docRef.id)
+      })
+      .catch(function (error) {
+        console.error('Error adding document: ', error)
+      })
+  }
+
+  getDatabase () {
+    //TODO modularize on mixin
+    cooperativaDatabase.collection('users').get().then((querySnapshot) => {
+      querySnapshot.forEach((doc) => {
+        console.log(`${doc.id} => ${JSON.stringify(doc.data())}`)
+      })
+    })
+  }
+
   constructor () {
     super()
   }
