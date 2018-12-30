@@ -7,8 +7,6 @@ let firebaseAuthMixin = (superClass) => class extends FirebaseMixin(superClass) 
   constructor () {
     super()
     this._verifyConnection()
-    console.log(this.facebookConfiguration)
-    console.log(this.firebase.auth)
     this.getProviders()
   }
 
@@ -34,18 +32,13 @@ let firebaseAuthMixin = (superClass) => class extends FirebaseMixin(superClass) 
   }
 
   getProviders () {
-
     this.providers.facebookProvider = new this.firebase.auth.FacebookAuthProvider()
     this.providers.googleProvider = new this.firebase.auth.GoogleAuthProvider()
-
-    console.log(this.providers)
-    //this.set('cooperativaDatabase', this.firebase.firestore())
-
-    /*cooperativaDatabase.settings({
-      timestampsInSnapshots: true
-    })
-*/
     this.providers.facebookProvider.setCustomParameters(this.facebookConfiguration)
+  }
+
+  async authAuthenticateWithProvider (provider) {
+    return await this.firebase.auth().signInWithPopup(provider)
   }
 
 }

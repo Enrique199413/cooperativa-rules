@@ -8,7 +8,7 @@ let firebaseApp = require('firebase/app')
 let firebaseMixin = (superClass) => class extends superClass {
   constructor () {
     super()
-    this._init()
+    this._initFirebase()
   }
 
   static get properties () {
@@ -40,7 +40,7 @@ let firebaseMixin = (superClass) => class extends superClass {
     }
   }
 
-  _init () {
+  _initFirebase () {
     this.set('initializeApp', firebaseApp.initializeApp({
       apiKey: this.apiKey,
       authDomain: this.authDomain,
@@ -58,17 +58,3 @@ let firebaseMixin = (superClass) => class extends superClass {
 }
 
 export const FirebaseMixin = dedupingMixin(firebaseMixin)
-
-/*
-let googleProvider = new firebase.auth.GoogleAuthProvider()
-let facebookProvider = new firebase.auth.FacebookAuthProvider()
-let cooperativaDatabase = firebase.firestore()
-
-cooperativaDatabase.settings({
-  timestampsInSnapshots: true
-})
-
-facebookProvider.setCustomParameters({
-  'display': 'popup'
-})
-* */
