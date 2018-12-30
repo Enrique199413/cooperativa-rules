@@ -8,15 +8,12 @@ import '@polymer/paper-icon-button/paper-icon-button'
 import '@polymer/iron-icons/iron-icons'
 import '@polymer/paper-styles/paper-styles'
 
-import { FirebaseMixin } from '../cooperativa-mixins/firebase-mixin'
-
 import css from './style.pcss'
 import template from './template.html'
 import { FirebaseAuthMixin } from '../cooperativa-mixins/firebase-auth'
+import { FirebaseFirestoreMixin } from '../cooperativa-mixins/firebase-firestore'
 
-console.log(FirebaseMixin)
-
-export default class CooperativaLayout extends FirebaseAuthMixin(PolymerElement) {
+export default class CooperativaLayout extends FirebaseFirestoreMixin(FirebaseAuthMixin(PolymerElement)) {
   static get properties () {
     return {
       name: {
@@ -31,6 +28,7 @@ export default class CooperativaLayout extends FirebaseAuthMixin(PolymerElement)
         type: String,
         value: process.env.NODE_ENV
       },
+      user: {}
     }
   }
 
@@ -39,70 +37,45 @@ export default class CooperativaLayout extends FirebaseAuthMixin(PolymerElement)
   }
 
   loginGoogle () {
-    //TODO modularize and create mixin
-    firebase.auth().signInWithPopup(googleProvider).then(function (result) {
-      // This gives you a Google Access Token. You can use it to access the Google API.
-      let token = result.credential.accessToken
-      // The signed-in user info.
-      let user = result.user
+    this.authAuthenticateWithProvider(this.providers.googleProvider).then(result => {
       console.log(result)
-      // ...
-    }).catch(function (error) {
-      // Handle Errors here.
-      let errorCode = error.code
-      let errorMessage = error.message
-      // The email of the user's account used.
-      let email = error.email
-      // The firebase.auth.AuthCredential type that was used.
-      let credential = error.credential
-      // ...
+      this.user = JSON.stringify(result.user)
+    }).catch((error) => {
+      console.log(error)
     })
   }
 
   loginFacebook () {
-    //TODO modularize and create mixin
-    firebase.auth().signInWithPopup(facebookProvider).then(function (result) {
-      // This gives you a Facebook Access Token. You can use it to access the Facebook API.
-      var token = result.credential.accessToken
-      // The signed-in user info.
-      var user = result.user
+    this.authAuthenticateWithProvider(this.providers.facebookProvider).then(result => {
       console.log(result)
-      // ...
-    }).catch(function (error) {
-      // Handle Errors here.
+      this.user = JSON.stringify(result.user)
+    }).catch((error) => {
       console.log(error)
-      var errorCode = error.code
-      var errorMessage = error.message
-      // The email of the user's account used.
-      var email = error.email
-      // The firebase.auth.AuthCredential type that was used.
-      var credential = error.credential
-      // ...
     })
   }
 
   writeDatabase () {
-    //TODO modularize on mixin
-    cooperativaDatabase.collection('users').add({
+    let params = {
       first: 'Alan',
       last: 'Turing',
       birthday: new Date(),
       email: 'jcjiron4@gmail.com'
+    }
+
+    this.collectionActions('add', 'users', params).then(docRef => {
+      console.log('Document written with ID: ', docRef.id)
+    }).catch(error => {
+      console.error('Error adding document: ', error)
     })
-      .then(function (docRef) {
-        console.log('Document written with ID: ', docRef.id)
-      })
-      .catch(function (error) {
-        console.error('Error adding document: ', error)
-      })
   }
 
   getDatabase () {
-    //TODO modularize on mixin
-    cooperativaDatabase.collection('users').get().then((querySnapshot) => {
+    this.collectionActions('get', 'users').then(querySnapshot => {
       querySnapshot.forEach((doc) => {
         console.log(`${doc.id} => ${JSON.stringify(doc.data())}`)
       })
+    }).catch(error => {
+      console.error('Error adding document: ', error)
     })
   }
 
