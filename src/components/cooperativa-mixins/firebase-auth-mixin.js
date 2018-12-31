@@ -42,7 +42,7 @@ let firebaseAuthMixin = (superClass) => class extends ReduxMixin(FirebaseMixin(s
     this.firebase.auth().onAuthStateChanged(user => {
       this.dispatchEvent(
         new CustomEvent('set-user', {
-          detail: user,
+          detail: user === null ? {} : user,
           bubbles: true,
           composed: true
         })
@@ -58,6 +58,10 @@ let firebaseAuthMixin = (superClass) => class extends ReduxMixin(FirebaseMixin(s
 
   async authAuthenticateWithProvider (provider) {
     return await this.firebase.auth().signInWithPopup(provider)
+  }
+
+  async destroySession () {
+    return await this.firebase.auth().signOut()
   }
 }
 
