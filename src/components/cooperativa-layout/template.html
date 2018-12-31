@@ -1,19 +1,42 @@
+<app-location route="{{route}}" use-hash-as-path></app-location>
+<app-route
+  route="{{route}}"
+  pattern="/:cooperativaRouteSelection"
+  data="{{cooperativaRoute}}"
+  tail="{{cooperativaSelectionTail}}">
+</app-route>
+
+<app-route
+  route="{{route}}"
+  pattern="/login"
+  data="{{pathData}}"
+  tail="{{pathDataTail}}">
+</app-route>
+
+<app-route
+  route="{{route}}"
+  pattern="/account"
+  query-params="{{queryParams}}"
+  tail="{{qpDemoTail}}">
+</app-route>
 <app-drawer-layout fullbleed force-narrow>
   <app-drawer slot="drawer">
     drawer-content
   </app-drawer>
   <app-header-layout has-scrolling-region>
-    <app-header slot="header" condenses reveals effects="waterfall">
-      <app-toolbar>
-        <paper-icon-button icon="menu" drawer-toggle></paper-icon-button>
-        <div main-title>cooperativa-rules</div>
-      </app-toolbar>
-    </app-header>
-    <div>{{user.photoURL}}</div>
-    <img src="{{user.photoURL}}"/>
-    <button on-click="loginGoogle">Google</button>
-    <button on-click="loginFacebook">Facebook</button>
-    <button on-click="writeDatabase">Write</button>
-    <button on-click="getDatabase">Get</button>
+    <iron-pages selected={{cooperativaRoute.cooperativaRouteSelection}} attr-for-selected="page-selection">
+      <div page-selection="account">
+        <app-header slot="header" condenses reveals effects="waterfall">
+          <app-toolbar>
+            <paper-icon-button icon="menu" drawer-toggle></paper-icon-button>
+            <div main-title>cooperativa-rules</div>
+          </app-toolbar>
+        </app-header>
+      </div>
+    </iron-pages>
+    <iron-pages selected={{cooperativaRoute.cooperativaRouteSelection}} attr-for-selected="page-selection">
+      <cooperativa-account page-selection="account"></cooperativa-account>
+      <cooperativa-login page-selection="login"></cooperativa-login>
+    </iron-pages>
   </app-header-layout>
 </app-drawer-layout>
