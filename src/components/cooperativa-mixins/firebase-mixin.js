@@ -5,6 +5,15 @@ require('firebase/firestore')
 
 let firebaseApp = require('firebase/app')
 
+let initializedApp = firebaseApp.initializeApp({
+  apiKey: process.env.apiKey,
+  authDomain: process.env.authDomain,
+  databaseURL: process.env.databaseURL,
+  projectId: process.env.projectId,
+  storageBucket: process.env.storageBucket,
+  messagingSenderId: process.env.messagingSenderId
+})
+
 let firebaseMixin = (superClass) => class extends superClass {
   constructor () {
     super()
@@ -36,19 +45,12 @@ let firebaseMixin = (superClass) => class extends superClass {
       messagingSenderId: {
         type: Object,
         value: process.env.messagingSenderId
-      },
+      }
     }
   }
 
   _initFirebase () {
-    this.set('initializeApp', firebaseApp.initializeApp({
-      apiKey: this.apiKey,
-      authDomain: this.authDomain,
-      databaseURL: this.databaseURL,
-      projectId: this.projectId,
-      storageBucket: this.storageBucket,
-      messagingSenderId: this.messagingSenderId
-    }))
+    this.set('initializeApp', initializedApp)
     this.set('firebase', firebaseApp)
   }
 
