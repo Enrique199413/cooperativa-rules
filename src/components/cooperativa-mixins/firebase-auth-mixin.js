@@ -1,12 +1,16 @@
 import { dedupingMixin } from '@polymer/polymer/lib/utils/mixin.js'
 import { FirebaseMixin } from './firebase-mixin'
+import ReduxMixin from './redux-mixin'
+import { bindActionCreators } from 'polymer-redux'
 
 require('firebase/auth')
 
-let firebaseAuthMixin = (superClass) => class extends FirebaseMixin(superClass) {
+//TODO try to remove ReduxMixin on class, for conserve pure polymer
+let firebaseAuthMixin = (superClass) => class extends ReduxMixin(FirebaseMixin(superClass)) {
   constructor () {
     super()
     this._verifyConnection()
+    this._verifyUserExist()
     this.getProviders()
   }
 
@@ -29,6 +33,21 @@ let firebaseAuthMixin = (superClass) => class extends FirebaseMixin(superClass) 
     if (!this.initializeApp.options) {
       throw new Error('FirebaseAuthMixin: Verify credentials on Firebase')
     }
+
+    this.firebase.auth().setPersistence(this.firebase.auth.Auth.Persistence.LOCAL)
+      .then(data => {})
+  }
+
+  _verifyUserExist () {
+    this.firebase.auth().onAuthStateChanged(user => {
+      this.dispatchEvent(
+        new CustomEvent('set-user', {
+          detail: user,
+          bubbles: true,
+          composed: true
+        })
+      )
+    })
   }
 
   getProviders () {
@@ -40,7 +59,6 @@ let firebaseAuthMixin = (superClass) => class extends FirebaseMixin(superClass) 
   async authAuthenticateWithProvider (provider) {
     return await this.firebase.auth().signInWithPopup(provider)
   }
-
 }
 
 export const FirebaseAuthMixin = dedupingMixin(firebaseAuthMixin)
