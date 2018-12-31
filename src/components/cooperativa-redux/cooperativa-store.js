@@ -1,4 +1,10 @@
-import { createStore } from 'redux'
+import { createStore, combineReducers } from 'redux'
 import userReducer from './cooperativa-reducers/cooperativa-user-reducer'
+import appReducer from './cooperativa-reducers/cooperativa-app-reducer'
 
-export default createStore(userReducer, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__())
+let reducerCombination = combineReducers({
+  userReducer,
+  appReducer
+})
+
+export default createStore(reducerCombination, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__())
