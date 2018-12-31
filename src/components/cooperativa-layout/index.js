@@ -10,10 +10,15 @@ import '@polymer/paper-styles/paper-styles'
 
 import css from './style.pcss'
 import template from './template.html'
-import { FirebaseAuthMixin } from '../cooperativa-mixins/firebase-auth'
-import { FirebaseFirestoreMixin } from '../cooperativa-mixins/firebase-firestore'
+import { FirebaseAuthMixin } from '../cooperativa-mixins/firebase-auth-mixin'
+import { FirebaseFirestoreMixin } from '../cooperativa-mixins/firebase-firestore-mixin'
 
-export default class CooperativaLayout extends FirebaseFirestoreMixin(FirebaseAuthMixin(PolymerElement)) {
+import ReduxMixin from '../cooperativa-mixins/redux-mixin'
+import { bindActionCreators } from 'polymer-redux'
+
+require('../cooperativa-redux/cooperativa-store')
+
+export default class CooperativaLayout extends ReduxMixin(FirebaseFirestoreMixin(FirebaseAuthMixin(PolymerElement))) {
   static get properties () {
     return {
       name: {
@@ -28,8 +33,32 @@ export default class CooperativaLayout extends FirebaseFirestoreMixin(FirebaseAu
         type: String,
         value: process.env.NODE_ENV
       },
-      user: {}
+      user: {
+        type: Object
+      }
     }
+  }
+
+  //TODO perform that code and re-write more simple
+  static mapStateToProps (state, element) {
+    return {
+      user: state.user
+    }
+  }
+
+  //TODO perform that code and re-write more simple
+  static mapDispatchToEvents (dispatch, element) {
+    return bindActionCreators(
+      {
+        setUser (event) {
+          return {
+            type: 'SET_USER',
+            user: event.detail
+          }
+        }
+      },
+      dispatch
+    )
   }
 
   static get template () {
@@ -38,8 +67,14 @@ export default class CooperativaLayout extends FirebaseFirestoreMixin(FirebaseAu
 
   loginGoogle () {
     this.authAuthenticateWithProvider(this.providers.googleProvider).then(result => {
-      console.log(result)
-      this.user = JSON.stringify(result.user)
+      //TODO try change this dispatch action
+      this.dispatchEvent(
+        new CustomEvent('set-user', {
+          detail: result.user,
+          bubbles: true,
+          composed: true
+        })
+      )
     }).catch((error) => {
       console.log(error)
     })
@@ -47,8 +82,7 @@ export default class CooperativaLayout extends FirebaseFirestoreMixin(FirebaseAu
 
   loginFacebook () {
     this.authAuthenticateWithProvider(this.providers.facebookProvider).then(result => {
-      console.log(result)
-      this.user = JSON.stringify(result.user)
+      this.user = result.user
     }).catch((error) => {
       console.log(error)
     })
