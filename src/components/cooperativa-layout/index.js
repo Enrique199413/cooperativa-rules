@@ -5,36 +5,35 @@ import '@polymer/app-layout/app-toolbar/app-toolbar'
 import '@polymer/app-layout/app-header/app-header'
 import '@polymer/app-layout/app-header-layout/app-header-layout'
 import '@polymer/paper-icon-button/paper-icon-button'
+import '@polymer/paper-button/paper-button'
+import '@polymer/paper-input/paper-input'
 import '@polymer/iron-icons/iron-icons'
+import '@polymer/iron-pages/iron-pages'
 import '@polymer/paper-styles/paper-styles'
+import '@polymer/app-route/app-location'
+import '@polymer/app-route/app-route'
+
+import '../cooperativa-pages/cooperativa-login'
+import '../cooperativa-pages/cooperativa-account'
 
 import css from './style.pcss'
 import template from './template.html'
-import { FirebaseAuthMixin } from '../cooperativa-mixins/firebase-auth-mixin'
-import { FirebaseFirestoreMixin } from '../cooperativa-mixins/firebase-firestore-mixin'
 
 import ReduxMixin from '../cooperativa-mixins/redux-mixin'
 import { bindActionCreators } from 'polymer-redux'
 
 require('../cooperativa-redux/cooperativa-store')
 
-export default class CooperativaLayout extends ReduxMixin(FirebaseFirestoreMixin(FirebaseAuthMixin(PolymerElement))) {
+export default class CooperativaLayout extends ReduxMixin(PolymerElement) {
   static get properties () {
     return {
-      name: {
-        type: String,
-        value: 'EnriqueLC'
-      },
-      appVersion: {
-        type: String,
-        value: process.env.appVersion
-      },
-      ENV: {
-        type: String,
-        value: process.env.NODE_ENV
-      },
       user: {
-        type: Object
+        type: Object,
+        observer: '_verifyUserExists'
+      },
+      loading: {
+        type: Boolean,
+        value: true
       }
     }
   }
@@ -42,7 +41,7 @@ export default class CooperativaLayout extends ReduxMixin(FirebaseFirestoreMixin
   //TODO perform that code and re-write more simple
   static mapStateToProps (state, element) {
     return {
-      user: state.user
+      user: state.userReducer.user
     }
   }
 
@@ -62,55 +61,44 @@ export default class CooperativaLayout extends ReduxMixin(FirebaseFirestoreMixin
   }
 
   static get template () {
-    return html([`<style>${css}</style> ${template}`])
+    return html([`<style>${css}</style>${template}`])
   }
 
-  loginGoogle () {
-    this.authAuthenticateWithProvider(this.providers.googleProvider).then(result => {
-      //TODO try change this dispatch action
-      this.dispatchEvent(
-        new CustomEvent('set-user', {
-          detail: result.user,
-          bubbles: true,
-          composed: true
-        })
-      )
-    }).catch((error) => {
-      console.log(error)
-    })
-  }
+  /*
+    writeDatabase () {
+      let params = {
+        first: 'Alan',
+        last: 'Turing',
+        birthday: new Date(),
+        email: 'jcjiron4@gmail.com'
+      }
 
-  loginFacebook () {
-    this.authAuthenticateWithProvider(this.providers.facebookProvider).then(result => {
-      this.user = result.user
-    }).catch((error) => {
-      console.log(error)
-    })
-  }
-
-  writeDatabase () {
-    let params = {
-      first: 'Alan',
-      last: 'Turing',
-      birthday: new Date(),
-      email: 'jcjiron4@gmail.com'
+      this.collectionActions('add', 'users', params).then(docRef => {
+        console.log('Document written with ID: ', docRef.id)
+      }).catch(error => {
+        console.error('Error adding document: ', error)
+      })
     }
 
-    this.collectionActions('add', 'users', params).then(docRef => {
-      console.log('Document written with ID: ', docRef.id)
-    }).catch(error => {
-      console.error('Error adding document: ', error)
-    })
-  }
-
-  getDatabase () {
-    this.collectionActions('get', 'users').then(querySnapshot => {
-      querySnapshot.forEach((doc) => {
-        console.log(`${doc.id} => ${JSON.stringify(doc.data())}`)
+    getDatabase () {
+      this.collectionActions('get', 'users').then(querySnapshot => {
+        querySnapshot.forEach((doc) => {
+          console.log(`${doc.id} => ${JSON.stringify(doc.data())}`)
+        })
+      }).catch(error => {
+        console.error('Error adding document: ', error)
       })
-    }).catch(error => {
-      console.error('Error adding document: ', error)
-    })
+    }*/
+
+  _verifyUserExists (userInformation = undefined) {
+    this.userExist = Object.keys(userInformation).length > 0
+    if (!this.userExist) {
+      this.cooperativaRoute.cooperativaRouteSelection = 'login'
+      this.notifyPath('cooperativaRoute.cooperativaRouteSelection', 'login')
+    } else {
+      this.cooperativaRoute.cooperativaRouteSelection = 'account'
+      this.notifyPath('cooperativaRoute.cooperativaRouteSelection', 'account')
+    }
   }
 
   constructor () {
