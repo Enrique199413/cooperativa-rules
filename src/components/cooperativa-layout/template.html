@@ -9,7 +9,8 @@
         <div main-title>cooperativa-rules</div>
       </app-toolbar>
     </app-header>
-    <div>{{user}}</div>
+    <div>{{user.photoURL}}</div>
+    <img src="{{user.photoURL}}"/>
     <button on-click="loginGoogle">Google</button>
     <button on-click="loginFacebook">Facebook</button>
     <button on-click="writeDatabase">Write</button>
