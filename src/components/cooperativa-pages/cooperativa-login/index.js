@@ -1,16 +1,12 @@
 import { PolymerElement, html } from '@polymer/polymer/polymer-element'
-import '@polymer/app-layout/app-drawer-layout/app-drawer-layout'
-import '@polymer/app-layout/app-drawer/app-drawer'
-import '@polymer/app-layout/app-toolbar/app-toolbar'
-import '@polymer/app-layout/app-header/app-header'
-import '@polymer/app-layout/app-header-layout/app-header-layout'
 import '@polymer/paper-icon-button/paper-icon-button'
 import '@polymer/iron-icons/iron-icons'
-import '@polymer/paper-styles/paper-styles'
-import '@polymer/app-route/app-location.js'
-import '@polymer/app-route/app-route.js'
+import '@polymer/paper-card/paper-card'
+import '@polymer/iron-flex-layout/iron-flex-layout-classes'
 
+import css from './style.pcss'
 import template from './template.html'
+
 import { FirebaseAuthMixin } from '../../cooperativa-mixins/firebase-auth-mixin'
 
 import ReduxMixin from '../../cooperativa-mixins/redux-mixin'
@@ -79,7 +75,7 @@ export default class CooperativaLogin extends ReduxMixin(FirebaseAuthMixin(Polym
   }
 
   static get template () {
-    return html([`${template}`])
+    return html([`<style is="custom-style" include="paper-material-styles iron-flex iron-flex-alignment cooperativa-shared-styles">${css}</style>${template}`])
   }
 
   constructor () {
