@@ -1,3 +1,20 @@
-<h1>Login Page</h1>
-<button on-click="loginGoogle">Google</button>
-<button on-click="loginFacebook">Facebook</button>
+<div class="layout horizontal center-center container flex-center-align">
+  <paper-card alt="Login" image="/assets/icons/android-chrome-512x512.png" heading="Iniciar sesión">
+    <div class="card-content flex-vertical center-center">
+      <h2>Bienvenido a la cooperativa la Imposible por favor coloca usuario y contraseña</h2>
+      <paper-input label="Usuario"></paper-input>
+      <paper-input label="Contraseña" type="password"></paper-input>
+      <div class="flex-horizontal">
+        <paper-button on-click="loginOffline" raised>Iniciar sesión</paper-button>
+        <paper-button on-click="forgotPassword" class="forget">Olvidé contraseña</paper-button>
+      </div>
+    </div>
+    <div class="card-actions">
+      <h2>O bien si lo prefieres inicia sesión con alguna de las siguientes opciones</h2>
+      <div class="center-center flex-center">
+        <paper-button on-click="loginGoogle" raised>Google</paper-button>
+        <paper-button on-click="loginFacebook" raised>Facebook</paper-button>
+      </div>
+    </div>
+  </paper-card>
+</div>
