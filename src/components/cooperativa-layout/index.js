@@ -8,15 +8,24 @@ import '@polymer/paper-icon-button/paper-icon-button'
 import '@polymer/paper-button/paper-button'
 import '@polymer/paper-input/paper-input'
 import '@polymer/iron-icons/iron-icons'
+import '@polymer/iron-icons/social-icons'
+import '@polymer/paper-menu-button/paper-menu-button'
 import '@polymer/iron-pages/iron-pages'
 import '@polymer/paper-styles/paper-styles'
+import '@polymer/paper-styles/typography'
 import '@polymer/app-route/app-location'
 import '@polymer/app-route/app-route'
-
+import '@polymer/paper-card/paper-card'
+import '@polymer/paper-listbox/paper-listbox'
+import '@polymer/paper-item/paper-item'
+import '@polymer/iron-flex-layout/iron-flex-layout-classes'
 import '../cooperativa-pages/cooperativa-login'
 import '../cooperativa-pages/cooperativa-account'
+import 'web-animations-js/web-animations-next-lite.min'
 
 import css from './style.pcss'
+import cssShared from '../cooperativa-shared-style/cooperativa-shared-style.pcss'
+
 import template from './template.html'
 
 import ReduxMixin from '../cooperativa-mixins/redux-mixin'
@@ -61,7 +70,7 @@ export default class CooperativaLayout extends ReduxMixin(PolymerElement) {
   }
 
   static get template () {
-    return html([`<style>${css}</style>${template}`])
+    return html([`<style is="cooperativa-shared-styles">${cssShared}</style><style is="custom-style" include="paper-material-styles iron-flex iron-flex-alignment">${css}</style>${template}`])
   }
 
   /*
