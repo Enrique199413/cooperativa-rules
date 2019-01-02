@@ -11,6 +11,7 @@ import '@polymer/app-route/app-location'
 import '@polymer/app-route/app-route'
 
 import template from './template.html'
+import css from './style.pcss'
 import { FirebaseAuthMixin } from '../../cooperativa-mixins/firebase-auth-mixin'
 
 import ReduxMixin from '../../cooperativa-mixins/redux-mixin'
@@ -48,6 +49,10 @@ export default class CooperativaAcount extends ReduxMixin(FirebaseAuthMixin(Poly
     )
   }
 
+  _getDate (date) {
+    return new Date(date)
+  }
+
   closeSession () {
     this.destroySession().then(function () {
       // Sign-out successful.
@@ -57,7 +62,7 @@ export default class CooperativaAcount extends ReduxMixin(FirebaseAuthMixin(Poly
   }
 
   static get template () {
-    return html([`${template}`])
+    return html([`<style is="custom-style" include="paper-material-styles iron-flex iron-flex-alignment cooperativa-shared-styles">${css}</style>${template}`])
   }
 
   constructor () {
