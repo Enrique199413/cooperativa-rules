@@ -1,6 +1,29 @@
-app-header {
-  background-color: #00897B;
-}
 paper-icon-button {
   --paper-icon-button-ink-color: white;
+}
+
+app-header {
+  background-color: #244970;
+  color: white;
+  --app-header-background-rear-layer: {
+    background-color: blue;
+  };
+}
+
+paper-card.navbar-style-paper-card {
+  color: black;
+  --paper-card-actions: {
+    padding: 0;
+  };
+  --paper-card: {
+    min-width: 220px;
+  };
+}
+
+paper-listbox {
+  padding: 0;
+}
+
+iron-pages.iron-pages-main-content {
+  height: calc(100vh - 89px);
 }
