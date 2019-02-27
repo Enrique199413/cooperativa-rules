@@ -16,8 +16,10 @@ import { FirebaseAuthMixin } from '../../cooperativa-mixins/firebase-auth-mixin'
 
 import ReduxMixin from '../../cooperativa-mixins/redux-mixin'
 import { bindActionCreators } from 'polymer-redux'
+import { FirebaseMixin } from '../../cooperativa-mixins/firebase-mixin'
+import { FirebaseFirestoreMixin } from '../../cooperativa-mixins/firebase-firestore-mixin'
 
-export default class CooperativaAcount extends ReduxMixin(FirebaseAuthMixin(PolymerElement)) {
+export default class CooperativaAcount extends ReduxMixin(FirebaseAuthMixin(FirebaseFirestoreMixin(PolymerElement))) {
   static get properties () {
     return {
       user: {
@@ -51,6 +53,20 @@ export default class CooperativaAcount extends ReduxMixin(FirebaseAuthMixin(Poly
 
   _getDate (date) {
     return new Date(date)
+  }
+
+  writeDatabase () {
+    //REMOVE THIS
+  }
+
+  getDatabase () {
+    this.collectionActions('get', 'users').then(querySnapshot => {
+      querySnapshot.forEach((doc) => {
+        console.log(`${doc.id} => ${JSON.stringify(doc.data())}`)
+      })
+    }).catch(error => {
+      console.error('Error adding document: ', error)
+    })
   }
 
   closeSession () {

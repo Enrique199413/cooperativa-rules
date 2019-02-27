@@ -73,32 +73,6 @@ export default class CooperativaLayout extends ReduxMixin(PolymerElement) {
     return html([`<style is="cooperativa-shared-styles">${cssShared}</style><style is="custom-style" include="paper-material-styles iron-flex iron-flex-alignment">${css}</style>${template}`])
   }
 
-  /*
-    writeDatabase () {
-      let params = {
-        first: 'Alan',
-        last: 'Turing',
-        birthday: new Date(),
-        email: 'jcjiron4@gmail.com'
-      }
-
-      this.collectionActions('add', 'users', params).then(docRef => {
-        console.log('Document written with ID: ', docRef.id)
-      }).catch(error => {
-        console.error('Error adding document: ', error)
-      })
-    }
-
-    getDatabase () {
-      this.collectionActions('get', 'users').then(querySnapshot => {
-        querySnapshot.forEach((doc) => {
-          console.log(`${doc.id} => ${JSON.stringify(doc.data())}`)
-        })
-      }).catch(error => {
-        console.error('Error adding document: ', error)
-      })
-    }*/
-
   _verifyUserExists (userInformation = undefined) {
     this.userExist = Object.keys(userInformation).length > 0
     if (!this.userExist) {

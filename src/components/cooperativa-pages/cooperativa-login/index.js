@@ -8,11 +8,12 @@ import css from './style.pcss'
 import template from './template.html'
 
 import { FirebaseAuthMixin } from '../../cooperativa-mixins/firebase-auth-mixin'
+import { UserModelMixin } from '../../cooperativa-mixins/user-model-mixin'
 
 import ReduxMixin from '../../cooperativa-mixins/redux-mixin'
 import { bindActionCreators } from 'polymer-redux'
 
-export default class CooperativaLogin extends ReduxMixin(FirebaseAuthMixin(PolymerElement)) {
+export default class CooperativaLogin extends ReduxMixin(FirebaseAuthMixin(UserModelMixin(PolymerElement))) {
   static get properties () {
     return {
       user: {
@@ -46,14 +47,7 @@ export default class CooperativaLogin extends ReduxMixin(FirebaseAuthMixin(Polym
 
   loginGoogle () {
     this.authAuthenticateWithProvider(this.providers.googleProvider).then(result => {
-      //TODO try change this dispatch action
-      this.dispatchEvent(
-        new CustomEvent('set-user', {
-          detail: result.user,
-          bubbles: true,
-          composed: true
-        })
-      )
+      this._dispatchUserSaveAction(result.user)
     }).catch((error) => {
       console.log(error)
     })
@@ -61,15 +55,24 @@ export default class CooperativaLogin extends ReduxMixin(FirebaseAuthMixin(Polym
 
   loginFacebook () {
     this.authAuthenticateWithProvider(this.providers.facebookProvider).then(result => {
-      //TODO try change this dispatch action
-      this.dispatchEvent(
-        new CustomEvent('set-user', {
-          detail: result.user,
-          bubbles: true,
-          composed: true
-        })
-      )
+      this._dispatchUserSaveAction(result.user)
     }).catch((error) => {
+      console.log(error)
+    })
+  }
+
+  _dispatchUserSaveAction (user) {
+    this.dispatchEvent(
+      new CustomEvent('set-user', {
+        detail: user,
+        bubbles: true,
+        composed: true
+      })
+    )
+
+    this.saveUser(user).then((success) => {
+      console.log(success)
+    }).catch(error => {
       console.log(error)
     })
   }
